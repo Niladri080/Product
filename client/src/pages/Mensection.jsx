@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Search, Package, ShoppingCart } from "lucide-react";
 import axios from "axios";
-import { UserContext } from "../contexts/userContext";
+import { UserContext } from "../contexts/UserContext";
 import { RiseLoader } from "react-spinners";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";

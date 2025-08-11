@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import AdminLogin from '../components/AdminLogin';
 import UserLogin from "../components/userLogin";

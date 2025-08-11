@@ -8,7 +8,7 @@ import LoginPage from "./pages/LoginPage";
 import Mensection from "./pages/Mensection";
 import AdminDashboard from "./pages/AdminDashboard";
 import PrivateAdminAuth from "./components/PrivateAdminAuth";
-import { UserProvider } from "./contexts/userContext";
+import { UserProvider } from "./contexts/UserContext";
 import AddProduct from "./pages/AddProduct";
 import {ToastContainer,toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

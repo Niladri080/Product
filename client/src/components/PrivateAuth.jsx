@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Loader from "./Loader";
 import { useContext } from "react";
-import { UserContext } from "../contexts/userContext";
+import { UserContext } from "../contexts/UserContext";
 
 const PrivateAuth = ({ children }) => {
   const {setuser}=useContext(UserContext);

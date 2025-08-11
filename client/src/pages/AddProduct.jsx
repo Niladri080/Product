@@ -3,7 +3,7 @@ import { Upload } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { UserContext } from "../contexts/userContext";
+import { UserContext } from "../contexts/UserContext";
 import ProductLoader from "../components/ProductLoader";
 import { RiseLoader } from "react-spinners";
 const AddProduct = ({ refresh, setrefresh }) => {

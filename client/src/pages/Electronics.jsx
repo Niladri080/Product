@@ -4,7 +4,7 @@ import axios from "axios";
 import { RiseLoader } from "react-spinners";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { UserContext } from "../contexts/userContext";
+import { UserContext } from "../contexts/UserContext";
 
 const Electronics = ({activeSection}) => {
   const {user}=useContext(UserContext);

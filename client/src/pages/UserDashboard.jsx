@@ -13,8 +13,7 @@ import Addtocart from "./Addtocart";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { RiseLoader } from "react-spinners";
-import { useNavigate } from "react-router";
-import { UserContext } from "../contexts/userContext";
+import { UserContext } from "../contexts/UserContext";
 const UserDashboard = () => {
   const {user}=useContext(UserContext);
   const [currentSlide, setCurrentSlide] = useState(0);

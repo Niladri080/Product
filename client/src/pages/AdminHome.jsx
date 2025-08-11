@@ -14,7 +14,7 @@ import {
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { RiseLoader } from "react-spinners";
-import { UserContext } from "../contexts/userContext";
+import { UserContext } from "../contexts/UserContext";
 import { toast } from "react-toastify";
 const AdminHome = ({ setSidebarOpen, refresh, activeTab }) => {
   const [User, setuser] = useState(null);

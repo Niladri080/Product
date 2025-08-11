@@ -15,7 +15,7 @@ import axios from "axios";
 import { RiseLoader } from "react-spinners";
 
 import { toast } from "react-toastify";
-import { UserContext } from "../contexts/userContext";
+import { UserContext } from "../contexts/UserContext";
 import Loader from "../components/Loader";
 
 const ProductPage = () => {
