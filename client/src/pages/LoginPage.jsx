@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import Loader from "../components/Loader";
 import AdminLogin from '../components/AdminLogin';
-import UserLogin from "../components/userLogin";
+import UserLogin from "../components/UserLogin";
 const LoginPage = () => {
   const [loading, setloading] = useState(false);
   const [activePage, setactivePage] = useState("user");
