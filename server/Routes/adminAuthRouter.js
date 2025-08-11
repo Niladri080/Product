@@ -1,0 +1,10 @@
+import { Router } from "express";
+import multer from 'multer';
+import { postlogin, postlogout, postsignup } from "../Controllers/adminAuth.js";
+const router=Router();
+const storage=multer.memoryStorage();
+const upload=multer({storage});
+router.post('/signup',upload.single('image'),postsignup);
+router.post('/login',postlogin);
+router.post('/logout',postlogout);
+export default router;

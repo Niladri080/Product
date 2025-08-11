@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { accessories, AddCart, dashGet, electronics, getCart, Home_Products, menProducts, productView, womenProducts } from "../Controllers/homeAuth.js";
+const router = Router();
+router.get("/home", dashGet);
+router.get('/men',menProducts);
+router.get('/women',womenProducts);
+router.get('/electronics',electronics);
+router.get('/accessories',accessories);
+router.get('/product_view/:id',productView);
+router.post('/add-cart',AddCart);
+router.post('/get-cart',getCart);
+router.post('/get-home',Home_Products);
+export default router;
