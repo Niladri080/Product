@@ -17,6 +17,9 @@ import ProductPage from "./pages/ProductPage";
 import UserSettings from "./pages/UserSettings";
 import EditProduct from "./pages/EditProduct";
 import AdminProductView from "./pages/AdminProductView";
+import CheckoutPage from "./pages/CheckoutPage";
+import OrderPlaced from "./pages/OrderPlaced";
+import UserOrders from "./pages/UserOrders";
 const App = () => {
   const [refresh,setrefresh]=useState(0);
   return (
@@ -35,6 +38,15 @@ const App = () => {
             </PrivateAuth>
           }
         />
+        <Route path='/user/dashboard/checkout/:id' element={
+          <PrivateAuth><CheckoutPage/></PrivateAuth>
+        }></Route>
+        <Route path='/user/dashboard/myorders' element={
+          <PrivateAuth><UserOrders/></PrivateAuth>
+        }></Route>
+         <Route path='/user/dashboard/checkout/placed' element={
+          <PrivateAuth><OrderPlaced/></PrivateAuth>
+        }></Route>
         <Route path='/user/dashboard/settings' element={<PrivateAuth><UserSettings/></PrivateAuth>}></Route>
          <Route path='/admin/dashboard' key={refresh} element={<PrivateAdminAuth><AdminDashboard refresh={refresh}/></PrivateAdminAuth>}>
         </Route>

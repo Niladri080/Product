@@ -1,5 +1,7 @@
+import mongoose from "mongoose";
 import cloudinary from "../config/cloudinary.js";
 import { Admin } from "../Models/AdminModel.js";
+import { Order } from "../Models/OrderModel.js";
 import { Product } from "../Models/ProductModel.js";
 import { productView } from "./homeAuth.js";
 
@@ -74,10 +76,22 @@ export const getUser = async (req, res) => {
   const { UserId } = req.body;
   const newUser = await Admin.findOne({ _id: UserId });
   const products = await Product.find({ admin_id: UserId });
+  const orders = await Order.find({ "products.admin_id": UserId });
+  const finalOrders = orders.map(order => ({
+      ...order.toObject(),
+      products: order.products.filter(p => String(p.admin_id) === String(UserId))
+  }));
+   let totalProfit=0;
+    finalOrders.forEach(order => {
+      totalProfit+=order.products.reduce((sum,product) => sum + product.price * product.quantity, 0);
+    });
+    await Admin.findByIdAndUpdate(UserId, { 
+  $set: { revenue: totalProfit,orders:finalOrders.length  } ,
+});
   if (!newUser) {
     return res.status(404).json({ success: false });
   }
-  return res.status(200).json({ success: true, user: newUser ,products:products});
+  return res.status(200).json({ success: true, user: newUser ,products:products,orders:finalOrders});
 };
 export const getProducts = async (req, res) => {
   try {
@@ -170,6 +184,35 @@ export const deleteItem=async (req,res)=>{
   if (!find){
     return res.status(400).json({success:false});
   }
+  await Admin.findByIdAndUpdate(find.admin_id,{$inc: {products:-1}});
   await Product.findByIdAndDelete({_id:id});
   return res.status(200).json({success:true,message:"Product delete successfully"});
 }
+export const profileUpdate=async (req,res)=>{
+  const {id,name,email,phone,address}=req.body;
+  const newUser=await Admin.findByIdAndUpdate(id,{$set:{name:name,email:email,phone:phone,address:address}},{new:true});
+  if (!newUser){
+    return res.status(400).json({success:false});
+  }
+  return res.status(200).json({success:true,message:"Your profile updated successfully",user:newUser});
+}
+export const getOrders = async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    const orders = await Order.find({ "products.admin_id": id });
+    const finalOrders = orders.map(order => ({
+      ...order.toObject(),
+      products: order.products.filter(p => String(p.admin_id) === String(id))
+    }));
+    if (!finalOrders.length) {
+      return res.status(404).json({ success: false, message: "No orders found" });
+    }
+
+    return res.status(200).json({ success: true, orders: finalOrders });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, error: "Server error" });
+  }
+};

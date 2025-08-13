@@ -115,15 +115,7 @@ export default function AdminProducts({ activeTab }) {
     }
   });
 
-  const toggleProductSelection = (productId) => {
-    const newSelected = new Set(selectedProducts);
-    if (newSelected.has(productId)) {
-      newSelected.delete(productId);
-    } else {
-      newSelected.add(productId);
-    }
-    setSelectedProducts(newSelected);
-  };
+  
 
   const formatDate = (date) => {
     const dateObj = new Date(date);
@@ -190,7 +182,10 @@ export default function AdminProducts({ activeTab }) {
             <Eye className="w-4 h-4 text-gray-600" />
           </Link>
           <button onClick={()=>{
-            handleDelete(product._id);
+            if 
+              (confirm("Are you sure you want to delete this product?")){
+                handleDelete(product._id);
+              }
           }} className="p-2 border border-gray-200 rounded-lg hover:bg-red-50 hover:border-red-200 transition-colors">
             <Trash2 className="w-4 h-4 text-red-600" />
           </button>

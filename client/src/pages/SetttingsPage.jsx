@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import {
   LogOut,
   User,
@@ -12,9 +12,15 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
+import { toast } from "react-toastify";
 
-const SettingsPage = () => {
+const SettingsPage = ({setActiveTab}) => {
+  const name=useRef(null);
+  const email=useRef(null);
+  const address=useRef(null);
+  const phone=useRef(null);
   const {user,setuser}=useContext(UserContext);
+  const [loading,setloading]=useState(false);
   const navigate=useNavigate();
   const handleLogout=()=>{
     axios.post("http://localhost:4000/api/admin/logout",{},{withCredentials:true})
@@ -30,13 +36,35 @@ const SettingsPage = () => {
       navigate('/login');
     })
   }
+  const handleUpdate=(e)=>{
+    e.preventDefault();
+    setloading(true);
+    axios.post('http://localhost:4000/api/admin/dashboard/update-profile',{id:user._id,name:name.current.value,email:email.current.value,phone:phone.current.value,address:address.current.value},{withCredentials:true})
+    .then(res=>{
+      if (res.data.success){
+        setuser(res.data.user);
+        setloading(false);
+        toast.success(res.data.message);
+        setActiveTab('dashboard');
+      }
+      else{
+        setloading(false);
+        toast.error("Network error. Please try again later");
+        setloading(false);
+      }
+    }).catch(err=>{
+      console.log(err.message);
+      setloading(false);
+      toast.error("Network error. Please try again later");
+    }
+  )
+  }
   return (
     <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8">
       {/* Header */}
       <div className="flex items-center mb-8 gap-4">
-        <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-400 flex items-center justify-center text-white text-3xl font-bold shadow-md">
-          <User className="w-12 h-12" />
-        </div>
+        <img src={user.image} className="w-20 h-20 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-400 flex items-center justify-center text-white text-3xl font-bold shadow-md"/>
+         
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Admin Settings</h2>
           <p className="text-gray-500">
@@ -46,7 +74,7 @@ const SettingsPage = () => {
       </div>
 
       {/* Profile Update Form (Design Only) */}
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleUpdate}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
@@ -54,9 +82,10 @@ const SettingsPage = () => {
             </label>
             <input
               type="text"
+              ref={name}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Full Name"
-              value={user.name} 
+              defaultValue={user.name}
               />
           </div>
           <div>
@@ -65,9 +94,10 @@ const SettingsPage = () => {
             </label>
             <input
               type="email"
+              ref={email}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Email Address"
-              value={user.email}
+              defaultValue={user.email}
             />
           </div>
           <div>
@@ -76,9 +106,10 @@ const SettingsPage = () => {
             </label>
             <input
               type="tel"
+              ref={phone}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Phone Number"
-              value={user.phone}
+              defaultValue={user.phone}
             />
           </div>
           <div>
@@ -87,34 +118,31 @@ const SettingsPage = () => {
             </label>
             <input
               type="text"
+              ref={address}
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Address"
-              value={user.address}
+              defaultValue={user.address}
             />
           </div>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
-            <ImageIcon className="w-4 h-4" /> Profile Image
-          </label>
-          <input
-            type="file"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            dis
-          />
-        </div>
+        
         <div className="flex gap-4">
           <button
-            type="button"
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors cursor-not-allowed opacity-70"
-            disabled
+            type="submit"
+            className={`${!loading && 'bg-blue-600'} ${loading && 'opacity-70'} text-white px-6 py-2 rounded-lg font-semibold ${!loading && 'hover:bg-blue-700'} transition-colors cursor-pointer`}
+            
           >
-            Update Profile
+            {loading && 'Updating'}
+            {!loading && 'Update Profile'}
           </button>
           <button
+            onClick={()=>{
+              if (confirm("Are you sure to cancel")){
+                setActiveTab('dashboard');
+              }
+            }}
             type="button"
-            className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors cursor-not-allowed opacity-70"
-            disabled
+            className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors cursor-pointer"
           >
             Cancel
           </button>

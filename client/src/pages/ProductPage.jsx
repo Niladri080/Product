@@ -209,7 +209,7 @@ const ProductPage = () => {
                   {product.name}
                 </h1>
                 <p className="text-2xl font-bold text-blue-600">
-                  ${product.price}
+                  ₹{product.price}
                 </p>
               </div>
 

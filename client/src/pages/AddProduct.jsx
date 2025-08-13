@@ -122,10 +122,9 @@ const AddProduct = ({ refresh, setrefresh }) => {
                   Product Name
                 </label>
                 <input
-                  type="number"
-                  step="1"
-                  placeholder="0"
-                  name="price"
+                  type="text"
+                  placeholder="Name"
+                  name="name"
                   className="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-black focus:border-black transition-all text-sm"
                   required
                 />

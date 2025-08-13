@@ -16,10 +16,11 @@ import { Link } from "react-router-dom";
 import { RiseLoader } from "react-spinners";
 import { UserContext } from "../contexts/UserContext";
 import { toast } from "react-toastify";
-const AdminHome = ({ setSidebarOpen, refresh, activeTab }) => {
+const AdminHome = ({ setSidebarOpen, refresh, activeTab,setActiveTab }) => {
   const [User, setuser] = useState(null);
   const { user } = useContext(UserContext);
   const [topProducts, settopProducts] = useState([]);
+  const [topOrders, settopOrders] = useState([]);
   useEffect(() => {
     axios
       .post(
@@ -38,7 +39,14 @@ const AdminHome = ({ setSidebarOpen, refresh, activeTab }) => {
             newProduct.push(res.data.products[i]);
             x--;
           }
+          const newOrders=[];
+          x=4;
+          for (let i=res.data.orders.length-1;i>=0 && x>0;i--){
+            newOrders.push(res.data.orders[i]);
+            x--;
+          }
           settopProducts(newProduct);
+          settopOrders(newOrders);
         } else {
           toast.error("Error while fetching data");
         }
@@ -51,14 +59,19 @@ const AdminHome = ({ setSidebarOpen, refresh, activeTab }) => {
     switch (status) {
       case "Completed":
         return "bg-green-100 text-green-800";
-      case "Pending":
+      case "Placed":
         return "bg-yellow-100 text-yellow-800";
-      case "Processing":
-        return "bg-blue-100 text-blue-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
+   const calculateProfit=(order)=>{
+    let totalAmount=0;
+    order.products.forEach(product=>{
+      totalAmount+=product.price*product.quantity;
+    });
+    return totalAmount;
+  }
   const StatCard = ({ title, value, growth, icon: Icon, color }) => (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
@@ -150,7 +163,9 @@ const AdminHome = ({ setSidebarOpen, refresh, activeTab }) => {
                         Recent Orders
                       </h3>
                       {User.orders > 0 && (
-                        <button className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
+                        <button onClick={()=>{
+                          setActiveTab("orders");
+                        }} className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center">
                           <Eye className="w-4 h-4 mr-1" />
                           View All
                         </button>
@@ -203,16 +218,16 @@ const AdminHome = ({ setSidebarOpen, refresh, activeTab }) => {
                       )}
                       {User.orders > 0 && (
                         <tbody className="divide-y divide-gray-200">
-                          {recentOrders.map((order) => (
-                            <tr key={order.id} className="hover:bg-gray-50">
+                          {topOrders.map((order) => (
+                            <tr key={order._id} className="hover:bg-gray-50">
                               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                {order.id}
+                                {`ORD-${new Date().getFullYear()}-${order._id[order._id.length-3]}${order._id[order._id.length-2]}${order._id[order._id.length-1]}`}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                                {order.customer}
+                                {order.address.name}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                                ₹{order.amount}
+                                ₹{calculateProfit(order)}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap">
                                 <span

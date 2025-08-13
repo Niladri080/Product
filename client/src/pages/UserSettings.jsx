@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import {
   LogOut,
   User,
@@ -13,23 +13,50 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { UserContext } from "../contexts/UserContext";
+import { toast } from "react-toastify";
 
 const UserSettings = () => {
+  const [loading, setloading] = useState(false);
   const {user,setuser}=useContext(UserContext);
+  const name=useRef(null);
+  const email=useRef(null);
   const navigate=useNavigate();
   const handleLogout=()=>{
+    setloading(true);
     axios.post("http://localhost:4000/api/user/logout",{},{withCredentials:true})
     .then((res=>{
       setuser(null);
       localStorage.removeItem("user");
       if (res.data.success){
+        setloading(false);
         navigate("/");
       }
     }))
     .catch((error)=>{
+      setloading(false);
       console.log(error.message);
       navigate('/login');
     })
+  }
+  const handleUpdate=(e)=>{
+    setloading(true);
+    axios.post('http://localhost:4000/api/dashboard/update-profile',{id:user._id,name:name.current.value,email:email.current.value},{withCredentials:true})
+    .then(res=>{
+      if (res.data.success){
+        setloading(false);
+        toast.success("Your profile updated successfully");
+        setuser(res.data.user);
+      }
+      else{
+        setloading(false);
+        toast.warning(res.data.message);
+      }
+    })
+    .catch((err) => {
+      setloading(false);
+      console.log(err);
+      toast.error("Network error. Please try again later");
+    });
   }
   return (
     <div className='flex justify-center items-center'>
@@ -58,7 +85,8 @@ const UserSettings = () => {
               type="text"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Full Name"
-              value={user.name} 
+              ref={name}
+              defaultValue={user.name} 
               />
           </div>
           <div>
@@ -69,34 +97,35 @@ const UserSettings = () => {
               type="email"
               className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Email Address"
-              value={user.email}
+              ref={email}
+              defaultValue={user.email}
             />
           </div>
           <div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
-              <MapPin className="w-4 h-4" /> Address
-            </label>
-            <input
-              type="text"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Address"
-            />
           </div>
         </div>
         <div className="flex gap-4">
           <button
             type="button"
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors cursor-not-allowed opacity-70"
-            disabled
+            onClick={()=>{
+              if (!loading){
+                handleUpdate();
+              }
+            }
+            }
+            className={`${loading && 'bg-blue-400 hover:bg-blue-500'} bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-800 transition-colors cursor-pointer opacity-70`}
+            
           >
-            Update Profile
+            {loading?'Updating':'Update Profile' }
           </button>
           <button
+          onClick={()=>{
+            if (confirm("Are you sure cancel?")){
+              navigate('/user/dashboard')
+            }
+          }}
             type="button"
             className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors cursor-not-allowed opacity-70"
-            disabled
           >
             Cancel
           </button>

@@ -14,6 +14,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { RiseLoader } from "react-spinners";
 import { UserContext } from "../contexts/UserContext";
+import { Link } from "react-router-dom";
 const UserDashboard = () => {
   const {user}=useContext(UserContext);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -122,9 +123,9 @@ const UserDashboard = () => {
                   }} className="bg-blue-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-700 transform hover:scale-105 transition-all duration-200 shadow-xl">
                     Shop Now
                   </button>
-                  <button className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-600 hover:text-white transform hover:scale-105 transition-all duration-200">
+                  <Link to='/user/dashboard/myorders' className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-600 hover:text-white transform hover:scale-105 transition-all duration-200">
                     My Orders
-                  </button>
+                  </Link>
                 </div>
               </div>
             </section>
@@ -268,7 +269,9 @@ const UserDashboard = () => {
                     placeholder="Enter your email"
                     className="flex-1 px-4 py-3 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 border-1 border-white focus:border-transparent"
                   />
-                  <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+                  <button onClick={()=>{
+                    toast.success("You are Subscribed successfully!");
+                  }} className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
                     Subscribe
                   </button>
                 </div>

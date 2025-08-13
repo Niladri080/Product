@@ -68,7 +68,7 @@ const AdminDashboard = ({refresh}) => {
       </div>
       {activeTab === "settings" && (
         <div className="flex-1 flex items-center justify-center">
-          <SettingsPage/>
+          <SettingsPage setActiveTab={setActiveTab}/>
         </div>
       )}
       {activeTab === "products" && (
@@ -78,7 +78,7 @@ const AdminDashboard = ({refresh}) => {
       )}
       {activeTab === "orders" && (
         <div className="flex-1 flex items-center justify-center">
-          <AdminOrder/>
+          <AdminOrder activeTab={activeTab}/>
         </div>
       )}
       {activeTab === "analytics" && (
@@ -91,7 +91,7 @@ const AdminDashboard = ({refresh}) => {
           <AdminCustomer/>
         </div>
       )}
-      {activeTab === "dashboard" && <AdminHome setSidebarOpen={setSidebarOpen} refresh={refresh} activeTab={activeTab}/>}
+      {activeTab === "dashboard" && <AdminHome setActiveTab={setActiveTab} setSidebarOpen={setSidebarOpen} refresh={refresh} activeTab={activeTab}/>}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"

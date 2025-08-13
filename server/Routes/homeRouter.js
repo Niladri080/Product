@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { accessories, AddCart, dashGet, electronics, getCart, Home_Products, menProducts, productView, womenProducts } from "../Controllers/homeAuth.js";
+import { accessories, AddCart, CancelOrder, createOrder, dashGet, deleteCart, electronics, FinalOrder, getCart, getOrders, Home_Products, menProducts, productView, profileUpdate, showOrder, womenProducts } from "../Controllers/homeAuth.js";
 const router = Router();
 router.get("/home", dashGet);
 router.get('/men',menProducts);
@@ -10,4 +10,11 @@ router.get('/product_view/:id',productView);
 router.post('/add-cart',AddCart);
 router.post('/get-cart',getCart);
 router.post('/get-home',Home_Products);
+router.post('/delete-cart',deleteCart);
+router.post('/create-order', createOrder);
+router.post('/show-order',showOrder);
+router.post('/final-order',FinalOrder);
+router.post('/cancel-order',CancelOrder);
+router.post('/update-profile', profileUpdate);
+router.post('/get-orders', getOrders);
 export default router;

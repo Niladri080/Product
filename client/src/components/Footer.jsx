@@ -19,19 +19,27 @@ const Footer=({setActiveSection})=>{
         <div>
           <h3 className="text-lg font-semibold mb-4">Categories</h3>
           <ul className="space-y-2 text-gray-400">
-            <li><a href="#" className="hover:text-white transition-colors duration-200">Men</a></li>
-            <li><a href="#" className="hover:text-white transition-colors duration-200">Women</a></li>
-            <li><a href="#" className="hover:text-white transition-colors duration-200">Electronics</a></li>
-            <li><a href="#" className="hover:text-white transition-colors duration-200">Accessories</a></li>
+            <li><span onClick={()=>{
+              setActiveSection('men')
+            }} className="hover:text-white transition-colors duration-200 cursor-pointer">Men</span></li>
+            <li><span onClick={()=>{
+              setActiveSection('women')
+            }} className="hover:text-white transition-colors duration-200 cursor-pointer">Women</span></li>
+            <li><span onClick={()=>{
+              setActiveSection('elec')
+            }} className="hover:text-white transition-colors duration-200 cursor-pointer">Electronics</span></li>
+            <li><span onClick={()=>{
+              setActiveSection('access')
+            }} className="hover:text-white transition-colors duration-200 cursor-pointer">Accessories</span></li>
           </ul>
         </div>
         <div>
           <h3 className="text-lg font-semibold mb-4">Connect</h3>
           <ul className="space-y-2 text-gray-400">
-            <li><a href="#" className="hover:text-white transition-colors duration-200">Facebook</a></li>
-            <li><a href="#" className="hover:text-white transition-colors duration-200">Twitter</a></li>
-            <li><a href="#" className="hover:text-white transition-colors duration-200">Instagram</a></li>
-            <li><a href="#" className="hover:text-white transition-colors duration-200">LinkedIn</a></li>
+            <li><a href="https://www.facebook.com/share/19JMQfR2C9/"  target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">Facebook</a></li>
+            <li><a href=" https://x.com/NiladriMan33829?t=YzIYTU9GGizt-cSn7lwLXg&s=08 " target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">Twitter</a></li>
+            <li><a href="https://www.instagram.com/_eclipse_echoes_?igsh=MWM4dTNnYmR1NzRhag==" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">Instagram</a></li>
+            <li><a href="www.linkedin.com/in/niladri-mandal-737b53294" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors duration-200">LinkedIn</a></li>
           </ul>
         </div>
       </div>
