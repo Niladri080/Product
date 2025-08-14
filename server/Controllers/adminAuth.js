@@ -36,7 +36,7 @@ export const postsignup = async (req, res) => {
       .json({ success: true, message: "Your account has been created successfully"});
   } catch (error) {
     console.log(error.message);
-    res.status(404).json({ success: false, message: error.message });
+    res.status(404).json({ success: false, message: "Network error. Please try again." });
   }
 };
 
@@ -45,13 +45,11 @@ export const postlogin = async (req, res) => {
     const { email, password } = req.body;
     const check = await Admin.findOne({ email });
     if (!check) {
-      console.log("User not found")
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
     if (!(await bcrypt.compare(password, check.password))) {
-      console.log("Password is incorrect")
       return res
         .status(401)
         .json({ success: false, message: "Wrong password" });
@@ -75,7 +73,6 @@ export const postlogin = async (req, res) => {
       sameSite: "lax",
       secure: false,
     });
-    console.log("Token created",token)
     return res
       .status(202)
       .json({ success: true, message: "You are logged in successfully"});

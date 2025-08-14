@@ -28,12 +28,20 @@ const SettingsPage = ({setActiveTab}) => {
       setuser(null);
       localStorage.removeItem("user");
       if (res.data.success){
+        toast.success("Logged out successfully");
         navigate("/");
+      }
+      else{
+        navigate("/");
+        toast.error("Network error. Please try again later");
       }
     }))
     .catch((error)=>{
+      setuser(null);
+      localStorage.removeItem("user");
+      toast.error("Network error. Please try again later");
       console.log(error.message);
-      navigate('/login');
+      navigate('/');
     })
   }
   const handleUpdate=(e)=>{

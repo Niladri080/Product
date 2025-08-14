@@ -1,15 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 const UserLogin=({loading,setloading})=>{
   const email = useRef(null);
   const password = useRef(null);
-  const [error, setError] = useState("");
   const navigate=useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     setloading(true);
-    setError("");
     fetch("http://localhost:4000/api/user/login", {
       credentials: "include",
       method: "POST",
@@ -24,19 +23,20 @@ const UserLogin=({loading,setloading})=>{
       .then((res) => res.json())
       .then((data) => {
         if (data.success === true) {
-          setTimeout(() => {
+            toast.success(data.message);
+            setTimeout(() => {
             setloading(false);
             navigate('/user/dashboard')
           }, 2000);
         } else {
+          toast.error(data.message);
           setloading(false);
-          setError(data.message);
         }
       })
       .catch((err) => {
+        toast.error("Network error. Please try again later");
         setloading(false);
         console.log(err.message);
-        setError("Network Error. Please try again.");
       });
   };
 
@@ -71,7 +71,6 @@ const UserLogin=({loading,setloading})=>{
                 </Link>{" "}
                 now.
               </div>
-              {error && <div className="signup-error">{error}</div>}
             </form>
   </>)
 }

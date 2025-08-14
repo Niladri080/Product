@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addProduct, deleteItem, editProduct, findProduct, getdash, getOrders, getProducts, getUser, profileUpdate } from "../Controllers/admindash.js";
+import { addProduct, deleteItem, editProduct, findProduct, getCustomers, getdash, getOrders, getProducts, getUser, profileUpdate } from "../Controllers/admindash.js";
 import multer from "multer";
 const storage=multer.memoryStorage();
 const upload=multer({storage})
@@ -13,4 +13,5 @@ router.post('/single-product',findProduct);
 router.post('/delete-item',deleteItem);
 router.post('/update-profile',profileUpdate);
 router.post('/get-orders',getOrders);
+router.post('/get-customers',getCustomers);
 export default router;

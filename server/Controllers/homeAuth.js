@@ -99,11 +99,12 @@ export const Home_Products = async (req, res) => {
       }
     }
     const viewProducts = [];
-    for (let i = 0; i < products.length && viewProducts.length < 7; i++) {
-      if (products[i].type === "men" || products[i].type === "women") {
-        viewProducts.push(products[i]);
-      }
-    }
+for (let i = 0; i < products.length; i++) {
+  if (viewProducts.length >= 6) break;
+  if (products[i].type === "men" || products[i].type === "women") {
+    viewProducts.push(products[i]);
+  }
+}
     return res
       .status(200)
       .json({ success: true, slider: slider, home: viewProducts });
@@ -184,7 +185,7 @@ export const showOrder = async (req, res) => {
   if (subTotalPrice < 1000) {
     deliveryCharge = 100;
   }
-  subTotalPrice = subTotalPrice + subTotalPrice * 0.05;
+  subTotalPrice = subTotalPrice + subTotalPrice * 0.005;
   let totalPrice = subTotalPrice + deliveryCharge;
   const address = await Address.findOne({ user_id: order.user_id });
   return res.status(200).json({

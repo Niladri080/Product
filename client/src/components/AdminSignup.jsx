@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const AdminSignup = () => {
   const navigate=useNavigate();
@@ -10,19 +11,15 @@ const AdminSignup = () => {
   const address = useRef(null);
   const password = useRef(null);
   const image = useRef(null);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const handleSubmit =async (e) => {
     try {
       e.preventDefault();
-      setError("");
-      setSuccess("");
       if (password.current.value.length < 6) {
-        return setError("Password must be at least 6 characters.");
+        return toast.error("Password must be at least 6 characters.");
       }
       const imageFile = image.current.files[0];
       if (!imageFile.type.startsWith("image/")) {
-        return setError("Selected file should be an image");
+        return toast.error("Selected file should be an image");
       }
       const formData = new FormData();
       formData.append("name", name.current.value);
@@ -38,16 +35,14 @@ const AdminSignup = () => {
       });
   
       if (res.data.success === true) {
-        setSuccess("Account created successfully! Redirecting...");
+        toast.success(res.data.message);
         navigate('/login')
       } else {
-        setSuccess("");
-        setError("Something went wrong. Please try again later");
+        toast.error(res.data.message);
       }
     } catch (error) {
+      toast.error("Failed to create account. Please try again later.");
       console.error(error.message);
-      setSuccess("");
-      setError("Network error. Please try again.");
     }
   };
   return (
@@ -110,8 +105,6 @@ const AdminSignup = () => {
           Login
         </Link>
       </div>
-      {error && <div className="signup-error">{error}</div>}
-      {success && <div className="signup-success">{success}</div>}
     </form>
   );
 };

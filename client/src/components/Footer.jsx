@@ -44,7 +44,7 @@ const Footer=({setActiveSection})=>{
         </div>
       </div>
       <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-        <p>&copy; 2025 Products. All rights reserved.</p>
+        <p>&copy; 2025 ShopFusion. Designed by <b>NILADRI</b></p>
       </div>
     </div>
   </footer>)

@@ -19,7 +19,7 @@ export const postsignup = async (req, res) => {
       .status(201)
       .json({ success: true, message: "Your account created successfully" });
   } catch (error) {
-    res.status(404).json({ success: false, message: error.message });
+    res.status(404).json({ success: false, message: "Network Error Please try again later" });
   }
 };
 

@@ -4,6 +4,8 @@ import { Admin } from "../Models/AdminModel.js";
 import { Order } from "../Models/OrderModel.js";
 import { Product } from "../Models/ProductModel.js";
 import { productView } from "./homeAuth.js";
+import { User } from "../Models/userModel.js";
+import { Address } from "../Models/Address.js";
 
 export const getdash = (req, res) => {
   res.status(200).json({
@@ -216,3 +218,35 @@ export const getOrders = async (req, res) => {
     return res.status(500).json({ success: false, error: "Server error" });
   }
 };
+export const getCustomers = async (req, res) => {
+  try {
+    console.log("Get customers function called");
+    const { id } = req.body;
+
+    const orders = await Order.find({ "products.admin_id": id });
+
+    const customerIds = [];
+    orders.forEach(order => {
+      const uid = order.user_id.toString(); // convert ObjectId to string
+      if (!customerIds.includes(uid)) {
+        customerIds.push(uid);
+      }
+    });
+
+    const userDetails = await Promise.all(
+      customerIds.map(async (customerId) => {
+        const user = await User.findById(customerId);
+        const address = await Address.findOne({ user_id: customerId });
+        return { email: user.email, address: address };
+      })
+    );
+
+    console.log(userDetails);
+    return res.status(200).json({ success: true, customers: userDetails });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, error: "Server error" });
+  }
+};
+

@@ -5,8 +5,10 @@ import ContactPage from './ContactPage';
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer';
 import FAQ from './FAQ';
+import { useNavigate } from 'react-router';
 
 const Dummydashboard = () => {
+  const navigate=useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [activeSection, setActiveSection] = useState('home');
 
@@ -14,21 +16,21 @@ const Dummydashboard = () => {
     {
       id: 1,
       name: "Premium Wireless Headphones",
-      price: "$299",
+      price: "₹2999",
       image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&h=600&fit=crop",
       description: "Experience crystal-clear audio with our premium wireless headphones"
     },
     {
       id: 2,
       name: "Smart Fitness Watch",
-      price: "$199",
+      price: "₹1999",
       image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&h=600&fit=crop",
       description: "Track your health and fitness goals with advanced smart features"
     },
     {
       id: 3,
       name: "Professional Camera",
-      price: "$899",
+      price: "₹8999",
       image: "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=800&h=600&fit=crop",
       description: "Capture stunning photos with professional-grade camera technology"
     }
@@ -38,50 +40,50 @@ const Dummydashboard = () => {
     {
       id: 4,
       name: "Laptop Pro",
-      price: "$1299",
+      price: "₹129999",
       rating: 4.8,
       image: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop",
-      originalPrice: "$1499"
+      originalPrice: "₹149999"
     },
     {
       id: 5,
       name: "Smartphone X",
-      price: "$799",
+      price: "₹17999",
       rating: 4.6,
       image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=300&fit=crop",
-      originalPrice: "$899"
+      originalPrice: "₹18989"
     },
     {
       id: 6,
       name: "Gaming Console",
-      price: "$499",
+      price: "₹49999",
       rating: 4.9,
       image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop",
-      originalPrice: "$599"
+      originalPrice: "₹59999"
     },
     {
       id: 7,
       name: "Wireless Speaker",
-      price: "$149",
+      price: "₹1490",
       rating: 4.5,
       image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=300&fit=crop",
-      originalPrice: "$199"
+      originalPrice: "₹1999"
     },
     {
       id: 8,
       name: "Tablet Plus",
-      price: "$399",
+      price: "₹39998",
       rating: 4.7,
       image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop",
-      originalPrice: "$449"
+      originalPrice: "₹44999"
     },
     {
       id: 9,
       name: "Smart Home Hub",
-      price: "$129",
+      price: "₹8299",
       rating: 4.4,
       image: "https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=400&h=300&fit=crop",
-      originalPrice: "$159"
+      originalPrice: "₹10059"
     }
   ];
 
@@ -136,10 +138,14 @@ const Dummydashboard = () => {
                   Your one-stop destination for premium quality products at unbeatable prices
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <button className="bg-white text-blue-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-50 transform hover:scale-105 transition-all duration-200 shadow-xl">
+                  <button onClick={()=>{
+                    navigate('/login')
+                  }} className="bg-white text-blue-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-50 transform hover:scale-105 transition-all duration-200 shadow-xl">
                     Shop Now
                   </button>
-                  <button className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-blue-900 transform hover:scale-105 transition-all duration-200">
+                  <button onClick={()=>{
+                    navigate('/login')
+                  }} className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-blue-900 transform hover:scale-105 transition-all duration-200">
                     Learn More
                   </button>
                 </div>
@@ -174,7 +180,9 @@ const Dummydashboard = () => {
                               <p className="text-lg mb-4 opacity-90">{product.description}</p>
                               <div className="flex items-center justify-between">
                                 <span className="text-2xl font-bold">{product.price}</span>
-                                <button className="bg-white text-black px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200">
+                                <button onClick={()=>{
+                    navigate('/login')
+                  }} className="bg-white text-black px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200">
                                   Add to Cart
                                 </button>
                               </div>
@@ -235,18 +243,15 @@ const Dummydashboard = () => {
                         </div>
                       </div>
                       <div className="p-6">
-                        <h3 className="text-xl font-semibold text-gray-900 mb-2">{product.name}</h3>
-                        <div className="flex items-center mb-2">
-                          {renderStars(product.rating)}
-                          <span className="ml-2 text-sm text-gray-600">({product.rating})</span>
-                        </div>
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center space-x-2">
                             <span className="text-2xl font-bold text-gray-900">{product.price}</span>
                             <span className="text-lg text-gray-500 line-through">{product.originalPrice}</span>
                           </div>
                         </div>
-                        <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2">
+                        <button onClick={()=>{
+                    navigate('/login')
+                  }} className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2">
                           <ShoppingCart className="w-4 h-4" />
                           <span>Add to Cart</span>
                         </button>
@@ -268,7 +273,9 @@ const Dummydashboard = () => {
                     placeholder="Enter your email" 
                     className="flex-1 px-4 py-3 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 border-1 border-white focus:border-transparent" 
                   />
-                  <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+                  <button onClick={()=>{
+                    navigate('/login')
+                  }} className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
                     Subscribe
                   </button>
                 </div>

@@ -1,35 +1,36 @@
 import {React, useContext, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 const AdminLogin = ({loading,setloading}) => {
   
   const email = useRef(null);
   const password = useRef(null);
-  const [error, setError] = useState("");
   const navigate=useNavigate();
   const handleSubmit=(e)=>{
     try {
       setloading(true);
       e.preventDefault();
-      setError("");
       axios.post("http://localhost:4000/api/admin/login",{email:email.current.value,password:password.current.value},{withCredentials:true})
       .then(res=> {
         if (res.data.success === true) {
+          toast.success(res.data.message);
           setTimeout(() => {
             setloading(false);
             navigate("/admin/dashboard");
           }, 2000);
         } else {
+          toast.error(res.data.message);
           setloading(false);
-          setError(res.data.message || "Login failed.");
         }   
       }).catch(err=>{
+        toast.error("Error occurred while logging in");
         setloading(false);
-        setError("Something went wrong.Try again")})
+        })
     } catch (error) {
+      toast.error("Network error. Please try again");
       setloading(false);
-      setError("Network error.Try again later");
     }
   }
   return (
@@ -62,7 +63,6 @@ const AdminLogin = ({loading,setloading}) => {
               Sign up
             </Link>
           </div>
-          {error && <div className="signup-error">{error}</div>}
         </form>
   );
 };

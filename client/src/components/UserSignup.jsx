@@ -1,18 +1,15 @@
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const UserSignup=()=>{
   const navigate = useNavigate();
   const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
     if (password.current.value.length < 6) {
-      return setError("Password must be at least 6 characters.");
+      return toast.error("Password must be at least 6 characters.");
     }
     fetch("http://localhost:4000/api/user/signup", {
       method: "POST",
@@ -28,13 +25,15 @@ const UserSignup=()=>{
       .then((res) => res.json())
       .then((data) => {
         if (data.success === true) {
-          setSuccess("Account created successfully! Redirecting...");
-          setTimeout(() => navigate("/login"), 1500);
+          toast.success(data.message);
+          navigate("/login");
         } else {
-          setError(data.message);
+          toast.error(data.message);
         }
       })
-      .catch(() => setError("Network error. Please try again."));
+      .catch(() => {
+        toast.error("Network error. Please try again.");
+      });
   };
   return (
     <form onSubmit={handleSubmit} className="signup-form">
@@ -71,8 +70,6 @@ const UserSignup=()=>{
               Login
             </Link>
           </div>
-          {error && <div className="signup-error">{error}</div>}
-          {success && <div className="signup-success">{success}</div>}
         </form>
   )
 } 

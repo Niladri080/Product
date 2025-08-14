@@ -104,7 +104,7 @@ const Addtocart = ({ activeSection, setActiveSection }) => {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const shipping = subtotal > 1000 ? 0 : 50;
+  const shipping = subtotal > 1000 ? 0 : 100;
   const tax = subtotal * 0.005; 
   const total = subtotal + shipping + tax;
 

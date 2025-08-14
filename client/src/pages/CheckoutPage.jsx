@@ -9,25 +9,27 @@ import { UserContext } from "../contexts/UserContext";
 export default function CheckoutPage() {
   const { user } = useContext(UserContext);
   const { id } = useParams();
-  const name=useRef(null);
-  const phone=useRef(null);
-  const city=useRef(null);
-  const state=useRef(null);
-  const pincode=useRef(null);
-  const addressLine1=useRef(null);
-  const addressLine2=useRef(null);
+  const name = useRef(null);
+  const phone = useRef(null);
+  const city = useRef(null);
+  const state = useRef(null);
+  const pincode = useRef(null);
+  const addressLine1 = useRef(null);
+  const addressLine2 = useRef(null);
   const navigate = useNavigate();
-  const [loading, setloading] = useState(false);
+
+  const [loading, setLoading] = useState(false);
   const [addressType, setAddressType] = useState("manual");
-  const [products, setproducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [SubTotal,setSubTotal]=useState(0);
-  const [delivery,setdelivery]=useState(0);
+  const [subTotal, setSubTotal] = useState(0);
+  const [delivery, setDelivery] = useState(0);
   const [address, setAddress] = useState({});
   const [currentLocation, setCurrentLocation] = useState(null);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+
   useEffect(() => {
-    setloading(true);
+    setLoading(true);
     axios
       .post(
         "http://localhost:4000/api/dashboard/show-order",
@@ -35,89 +37,98 @@ export default function CheckoutPage() {
         { withCredentials: true }
       )
       .then((res) => {
-        console.log(res.data.order);
         if (res.data.success) {
-          setproducts(res.data.order.products);
-          setTotalAmount(res.data.totalPrice)
-          setSubTotal(res.data.subTotalPrice)
-          setdelivery(res.data.deliveryCharge)
-          setAddress(res.data.address);
-          setloading(false);
+          setProducts(res.data.order.products);
+          setTotalAmount(res.data.totalPrice);
+          setSubTotal(res.data.subTotalPrice);
+          setDelivery(res.data.deliveryCharge);
+          // Ensure address is always an object
+          setAddress(res.data.address || {});
         } else {
           toast.error(res.data.message);
-          setloading(false);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error.message);
+        toast.error("Something unexpected happened.");
+        setLoading(false);
+      });
+  }, [id]);
+
+  const CancelOrder = () => {
+    setLoading(true);
+    axios
+      .post(
+        "http://localhost:4000/api/dashboard/cancel-order",
+        { id },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        if (res.data.success) {
+          toast.success(res.data.message);
+          navigate("/user/dashboard");
+        } else {
+          toast.error(res.data.message);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error.message);
+        toast.error("Something unexpected happened.");
+        setLoading(false);
+      });
+  };
+
+  const handlePlaced = () => {
+    let newAddress = {};
+
+    if (addressType === "manual") {
+      if (
+        !name.current.value ||
+        !phone.current.value ||
+        !addressLine1.current.value ||
+        !city.current.value ||
+        !state.current.value ||
+        !pincode.current.value
+      ) {
+        toast.error("Please fill all the required fields.");
+        return;
+      }
+      newAddress = {
+        name: name.current.value,
+        phone: phone.current.value,
+        line1: addressLine1.current.value,
+        line2: addressLine2.current.value,
+        city: city.current.value,
+        state: state.current.value,
+        pincode: pincode.current.value,
+      };
+    }
+
+    setLoading(true);
+    axios
+      .post(
+        "http://localhost:4000/api/dashboard/final-order",
+        { id, address: newAddress },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        if (res.data.success) {
+          toast.success(res.data.message);
+          navigate("/user/dashboard/checkout/placed");
+        } else {
+          toast.error(res.data.message);
+          setLoading(false);
         }
       })
       .catch((error) => {
         console.log(error.message);
         toast.error("Something unexpected happened.");
-        setloading(false);
+        setLoading(false);
       });
-  }, [id]);
-  const CancelOrder=()=>{
-    setloading(true);
-    axios.post('http://localhost:4000/api/dashboard/cancel-order',{id},{withCredentials:true})
-   .then(res=>{
-     if (res.data.success){
-        setloading(false);
-        toast.success(res.data.message);
-        navigate('/user/dashboard');
-      }
-      else{
-        toast.error(res.data.message);
-        setloading(false);
-      }
-    }
-    )
-   .catch(error=>{
-     console.log(error.message);
-     toast.error("Something unexpected happened.");
-     setloading(false);
-   })
-  }
-  const handlePlaced=()=>{
-    let newAddress={}
-    if (addressType === "manual") {
-      if (
-        name.current.value === "" ||
-        phone.current.value === "" ||
-        addressLine1.current.value === "" ||
-        city.current.value === "" ||
-        state.current.value === "" ||
-        pincode.current.value === ""
-      ) {
-        toast.error("Please fill all the required fields.");
-        return;
-      }
-      newAddress={
-        name:name.current.value,
-        phone:phone.current.value,
-        line1:addressLine1.current.value,
-        line2:addressLine2.current.value,
-        city:city.current.value,
-        state: state.current.value,
-        pincode: pincode.current.value,
-      }
-    } 
-    setloading(true);
-    axios.post('http://localhost:4000/api/dashboard/final-order',{id,address:newAddress},{withCredentials:true})
-    .then(res=>{
-      if (res.data.success){
-        toast.success(res.data.message);
-        navigate('/user/dashboard/checkout/placed');
-      }
-      else{
-        toast.error(res.data.message);
-        setloading(false);
-      }
-    }
-    )
-    .catch(error=>{
-      console.log(error.message);
-      toast.error("Something unexpected happened.");
-      setloading(false);
-    })
-  }
+  };
+
   const getCurrentLocation = () => {
     setIsLoadingLocation(true);
 
@@ -140,9 +151,7 @@ export default function CheckoutPage() {
         },
         (error) => {
           console.error("Error getting location:", error);
-          alert(
-            "Unable to get current location. Please enter address manually."
-          );
+          alert("Unable to get current location. Please enter address manually.");
           setIsLoadingLocation(false);
         }
       );
@@ -154,12 +163,11 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      {loading && (
+      {loading ? (
         <div className="flex items-center justify-center min-h-[300px]">
           <RiseLoader />
         </div>
-      )}
-      {!loading && (
+      ) : (
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             {/* Header */}
@@ -172,7 +180,7 @@ export default function CheckoutPage() {
 
             <div className="p-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Left Column - Address & Payment */}
+                {/* Left Column */}
                 <div className="lg:col-span-2 space-y-6">
                   {/* Address Section */}
                   <div className="border rounded-lg p-6">
@@ -213,32 +221,29 @@ export default function CheckoutPage() {
                             type="text"
                             placeholder="Full Name *"
                             ref={name}
-                            defaultValue={user.name}
+                            defaultValue={user?.name || ""}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            required
                           />
                           <input
                             type="tel"
                             placeholder="Phone Number *"
                             ref={phone}
-                            defaultValue={address.phone?address.phone : ''}
+                            defaultValue={address?.phone || ""}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            required
                           />
                         </div>
                         <input
                           type="text"
                           placeholder="Address Line 1 *"
                           ref={addressLine1}
-                          defaultValue={address.line1?address.line1 : ''}
+                          defaultValue={address?.line1 || ""}
                           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          required
                         />
                         <input
                           type="text"
                           placeholder="Address Line 2 (Optional)"
                           ref={addressLine2}
-                          defaultValue={address.line2?address.line2 : ''}
+                          defaultValue={address?.line2 || ""}
                           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -246,25 +251,22 @@ export default function CheckoutPage() {
                             type="text"
                             placeholder="City *"
                             ref={city}
-                            defaultValue={address.city?address.city : ''}
+                            defaultValue={address?.city || ""}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            required
                           />
                           <input
                             type="text"
                             placeholder="State *"
                             ref={state}
-                            defaultValue={address.state?address.state : ''}
+                            defaultValue={address?.state || ""}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            required
                           />
                           <input
                             type="text"
                             placeholder="PIN Code *"
                             ref={pincode}
-                            defaultValue={address.pin?address.pin : ''}
+                            defaultValue={address?.pin || ""}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            required
                           />
                         </div>
                       </div>
@@ -342,9 +344,7 @@ export default function CheckoutPage() {
                 {/* Right Column - Order Summary */}
                 <div className="space-y-6">
                   <div className="border rounded-lg p-6 sticky top-6">
-                    <h2 className="text-xl font-semibold mb-4">
-                      Order Summary
-                    </h2>
+                    <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
                     {products.map((product, index) => (
                       <div key={index} className="flex gap-4 mb-6">
                         <img
@@ -356,47 +356,40 @@ export default function CheckoutPage() {
                           <h3 className="font-medium text-gray-900">
                             {product.name}
                           </h3>
-                          <p className="text-gray-600">
-                            Qty: {product.quantity}
-                          </p>
+                          <p className="text-gray-600">Qty: {product.quantity}</p>
                           <p className="font-semibold text-gray-900">
                             ₹{product.price}
                           </p>
                         </div>
                       </div>
                     ))}
-                    {/* Price Breakdown */}
                     <div className="space-y-3 border-t pt-4">
                       <div className="flex justify-between">
                         <span>Subtotal</span>
-                        <span>₹{SubTotal}</span>
+                        <span>₹{subTotal}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Delivery Charges</span>
-                        <span>{delivery===0?'Free':'₹'+delivery}</span>
+                        <span>{delivery === 0 ? "Free" : "₹" + delivery}</span>
                       </div>
                       <div className="flex justify-between font-bold text-lg border-t pt-3">
                         <span>Total</span>
                         <span>₹{totalAmount}</span>
                       </div>
                     </div>
-
-                    {/* Place Order Button */}
                     <button
                       onClick={handlePlaced}
-                      className="w-full bg-gradient-to-r bg-blue-500  text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-600  transition-all transform hover:scale-105 mt-6"
+                      className="w-full bg-blue-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-600 transition-all transform hover:scale-105 mt-6"
                     >
                       Place Order - ₹ {totalAmount}
                     </button>
                     <button
                       onClick={() => {
-                        if (
-                          confirm("Are you sure you want to cancel the order?")
-                        ) {
+                        if (confirm("Are you sure you want to cancel the order?")) {
                           CancelOrder();
                         }
                       }}
-                      className="w-full bg-gradient-to-r bg-red-500  text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-600  transition-all transform hover:scale-105 mt-2"
+                      className="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-600 transition-all transform hover:scale-105 mt-2"
                     >
                       Cancel Order
                     </button>

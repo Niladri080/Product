@@ -105,24 +105,22 @@ const AdminHome = ({ setSidebarOpen, refresh, activeTab,setActiveTab }) => {
             {/* Header */}
             <header className="bg-white shadow-sm border-b border-gray-200">
               <div className="flex items-center justify-between px-6 py-4">
-                <div className="flex items-center">
-                  <button
-                    onClick={() => setSidebarOpen(true)}
-                    className="lg:hidden mr-4 p-2 rounded-md hover:bg-gray-100"
-                  >
-                    <Menu className="w-5 h-5" />
-                  </button>
-                  <h2 className="text-2xl font-bold text-gray-900">
+                  <h2 className="text-2xl font-bold text-gray-900 sm:pr-2 md:mr-0">
                     Welcome back, {User.name.split(" ")[0]}
                   </h2>
-                </div>
                 <div className="flex items-center space-x-4">
                   <Link
                     to="/admin/dashboard/add-product"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors  items-center hidden md:flex"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Product
+                  </Link>
+                  <Link
+                    to="/admin/dashboard/add-product"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-3 rounded-lg font-medium transition-colors flex items-center md:hidden"
+                  >
+                    <Plus className="w-5 h-5" />
                   </Link>
                   <img src={User.image} className="w-10 h-10 rounded-full" />
                 </div>
